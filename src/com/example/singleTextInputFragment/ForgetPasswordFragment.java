@@ -1,8 +1,10 @@
 package com.example.singleTextInputFragment;
 
 import com.example.appearanceactivity.R;
+import com.example.appearanceactivity.forget_two_page_Activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,8 @@ public class ForgetPasswordFragment extends Fragment {
 	}
 
 	protected void GotoNext() {
+		Intent i=new Intent(getActivity(), forget_two_page_Activity.class);
+		startActivity(i);
 		
 	}
 	

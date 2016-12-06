@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <fragment
+            android:id="@+id/fragment_forget_email"
+            android:name="com.example.singleTextInputFragment.SingleTextViewInputFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            tools:layout="@layout/singleinput_fragment" />
+
+        <fragment
+            android:id="@+id/fragment_forget_password"
+            android:name="com.example.singleTextInputFragment.SingleTextViewInputFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            tools:layout="@layout/singleinput_fragment" />
+
+        <fragment
+            android:id="@+id/fragment_forget_repeat_password"
+            android:name="com.example.singleTextInputFragment.SingleTextViewInputFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            tools:layout="@layout/singleinput_fragment" />
+
+        <Button
+            android:id="@+id/forget_repeat_comit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:padding="2sp"
+            android:text="@string/com"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+
+</LinearLayout>

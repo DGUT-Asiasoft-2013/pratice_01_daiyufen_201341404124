@@ -38,6 +38,10 @@
             android:name="com.example.appearanceactivity.ForgetPassord_Activity"
             android:theme="@style/AppTheme" >
         </activity>
+        <activity
+            android:name=".forget_two_page_Activity"
+            android:theme="@style/AppTheme" >
+        </activity>
     </application>
 
 </manifest>
