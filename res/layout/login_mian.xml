@@ -35,8 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10" >
-
-                
             </EditText>
         </LinearLayout>
 
@@ -57,6 +55,16 @@
                 android:layout_height="wrap_content"
                 android:ems="10" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/forget_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:text="忘记密码？"
+            android:padding="2sp"
+            android:layout_gravity="right"
+            android:textColor="#00f"
+            android:textSize="16dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -79,7 +87,6 @@
                 android:background="#adc0ed"
                 android:text="@string/regist" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

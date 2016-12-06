@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class SingleImageInputFragment extends SingleAbstractSourse {
+	private static final int TAKEPHOTO_CAMERA = 1;
+	private static final int PHOTO = 2;
 	private ImageView imageView;
 	private TextView tv;
 	private TextView hintTV;
@@ -32,74 +34,113 @@ public class SingleImageInputFragment extends SingleAbstractSourse {
 			@Override
 			public void onClick(View v) {
 				
-				String[] options={"’’∆¨","≈ƒ’’"};
-				new AlertDialog
-				.Builder(getActivity())
-				.setTitle("—°‘ÒÕº∆¨")
-				.setItems(options, new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-						case 0:
-							pickPhoto();
-							break;
-							
-							case 1:
-								takephoto();
-								break;
+				onImageViewClicked();
 
-						default:
-							break;
-						}
-						
-					}
-
-					
-				}).setNegativeButton("»°œ˚", null)
-				.show();
 				
 			}
 		});
 		return rootView;
 	}
 	
-	public void takephoto() {
-		Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		startActivityForResult(intent, 1);
+	void onImageViewClicked(){
+		String[] options = {
+				"≈ƒ’’",
+				"œ‡≤·"
+		};
+
+		new AlertDialog.Builder(getActivity())
+		.setTitle("—°‘Ò’’∆¨")
+		.setItems(options, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+				case 0:
+					takePhoto();
+					break;
+
+				case 1:
+					pickFromAlbum();
+					break;
+
+				default:
+					break;
+				}
+			}
+		})
+		.setNegativeButton("»°œ˚", null)
+		.show();
 	}
 
-	
+	void takePhoto(){
+		Intent itnt = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(itnt, TAKEPHOTO_CAMERA);
+	}
+
+	void pickFromAlbum(){
+		Intent itnt = new Intent(Intent.ACTION_GET_CONTENT);
+		itnt.setType("image/*");
+		startActivityForResult(itnt, PHOTO);
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode==Activity.RESULT_CANCELED) {
-			return;
-			
-		}
-		if (requestCode==1) {
-			//ªÒµ√Õº∆¨
-			Bitmap bitmap=(Bitmap) data.getExtras().get("data");
-			//…Ë÷√Õº∆¨
-			imageView.setImageBitmap(bitmap);
-			
-		}
-		else if (requestCode==2) {
+		if(resultCode == Activity.RESULT_CANCELED) return;
+
+		if(requestCode == TAKEPHOTO_CAMERA){
+			//≈ƒ’’
+
+			Bitmap bmp = (Bitmap)data.getExtras().get("data");
+			imageView.setImageBitmap(bmp);
+		}else if(requestCode == PHOTO){
+			//œ‡∆¨
 			try {
-				Bitmap bit=MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-						imageView.setImageBitmap(bit);
+				Bitmap bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+				imageView.setImageBitmap(bmp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-			
 		}
-		
 	}
+
+	
 	public void pickPhoto() {
 		Intent in=new Intent(Intent.ACTION_GET_CONTENT);
-		
-		startActivityForResult(in, 2);
+		in.setType("image/*");
+		startActivityForResult(in, TAKEPHOTO_CAMERA);
 	}
+	
+	public void takephoto() {
+		Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(intent, PHOTO);
+	}
+
+	
+//	@Override
+//	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if (requestCode==Activity.RESULT_CANCELED) {
+//			return;
+//			
+//		}
+//		if (requestCode==2) {
+//			//ªÒµ√Õº∆¨
+//			Bitmap bitmap=(Bitmap) data.getExtras().get("data");
+//			//…Ë÷√Õº∆¨
+//			imageView.setImageBitmap(bitmap);
+//			
+//		}
+//		else if (requestCode==1) {
+//			try {
+//				Bitmap bit=MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+//						imageView.setImageBitmap(bit);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			
+//		}
+//		
+//	}
+//	
 	
 	public void setinputSingleTextLabel(String label) {
 		tv.setText(label);

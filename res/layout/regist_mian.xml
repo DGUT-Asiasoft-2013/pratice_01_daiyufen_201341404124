@@ -40,6 +40,16 @@
             tools:layout="@layout/singleinput_fragment" />
 
         <fragment
+            android:id="@+id/fragment_five"
+            android:name="com.example.singleTextInputFragment.SingleTextViewInputFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            tools:layout="@layout/singleinput_fragment" />
+
+        <fragment
             android:id="@+id/fragment_four"
             android:name="com.example.singleTextInputFragment.SingleImageInputFragment"
             android:layout_width="315dp"
@@ -47,6 +57,14 @@
             android:layout_alignBottom="@+id/fragment_three"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/fragment_image_main" />
+
+        <Button
+            android:id="@+id/commit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:padding="3dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Commit"/>
     </LinearLayout>
 
 </LinearLayout>

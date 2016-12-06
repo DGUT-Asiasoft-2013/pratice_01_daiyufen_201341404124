@@ -22,9 +22,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".RegistActivity"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".RegistActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.example.appearanceactivity.AppActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name="com.example.appearanceactivity.ForgetPassord_Activity"
+            android:theme="@style/AppTheme" >
+        </activity>
     </application>
 
 </manifest>

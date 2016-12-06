@@ -14,5 +14,7 @@
     <string name="again">重输密码：</string>
     <string name="image">选择图片</string>
     <string name="choose">请选择图片</string>
+    <string name="abb">欢迎来到app</string>
+    <string name="next">下一个</string>
 
 </resources>

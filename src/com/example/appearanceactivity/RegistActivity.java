@@ -1,18 +1,24 @@
 package com.example.appearanceactivity;
 
-import com.example.singleTextInputFragment.SingleImageInputFragment;
 import com.example.singleTextInputFragment.SingleTextViewInputFragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class RegistActivity extends Activity {
 	
 	SingleTextViewInputFragment fragment_num;
 	SingleTextViewInputFragment fragment_password;
 	SingleTextViewInputFragment fragment_repeat_password;
+	SingleTextViewInputFragment fragment_email;
 	
-	SingleImageInputFragment fragment_image;
+	
+	private Button commit_btn;
+	//SingleImageInputFragment fragment_image;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +31,18 @@ public class RegistActivity extends Activity {
 		fragment_num=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_one);
 		fragment_password=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_two);
 		fragment_repeat_password=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_three);
+		fragment_email=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_five);
 	
-		fragment_image=(SingleImageInputFragment)getFragmentManager().findFragmentById(R.id.fragment_four);
+		commit_btn=(Button) findViewById(R.id.commit);
+		commit_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intit=new Intent(RegistActivity.this, LoginActivity.class);
+				startActivity(intit);
+				finish();
+			}
+		});
 		
 	}
 	@Override
@@ -37,8 +53,12 @@ public class RegistActivity extends Activity {
 		fragment_num.setinputSingleTextHintLabel("ÇëÊäÈëÄãµÄÓÃ»§Ãû");
 		fragment_password.setinputSingleTextLabel("ÃÜÂë£º");
 		fragment_password.setinputSingleTextHintLabel("ÇëÊäÈëÄãµÄÃÜÂë£º");
+		fragment_password.setIspassword(true);
 		fragment_repeat_password.setinputSingleTextLabel("ÖØ¸´ÃÜÂë£º");
 		fragment_repeat_password.setIspassword(true);
+		
+		fragment_email.setinputSingleTextHintLabel("×¢²áÓÊÏä£º");
+		fragment_email.setinputSingleTextHintLabel("ÇëÊäÈëÄãµÄÓÊÏä");
 	}
 
 }
