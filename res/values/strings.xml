@@ -17,5 +17,6 @@
     <string name="abb">欢迎来到app</string>
     <string name="next">下一个</string>
     <string name="com">提交</string>
+    <string name="message">下面请输入信息</string>
 
 </resources>

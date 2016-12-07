@@ -1,8 +1,10 @@
 package com.example.singleTextInputFragment;
 
+import com.example.appearanceactivity.Add_Click_Activity;
 import com.example.appearanceactivity.R;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +17,14 @@ public class TabFragment extends Fragment {
 	
 	View[] ta;
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, 
+			ViewGroup container, Bundle savedInstanceState) {
 		View view=inflater.inflate(R.layout.tab_fragment_main, null);
 		
 		feed_tabs=view.findViewById(R.id.tab_feed);
 		note_tabs=view.findViewById(R.id.tab_note);
 		add_btn=view.findViewById(R.id.add_btn);
+		add_btn.setOnClickListener(new AddbuttonClickListner());  //ÉèÖÃ¼àÌýÆ÷
 		life_tabs=view.findViewById(R.id.tab_life);
 		me_tabs=view.findViewById(R.id.tab_me);
 		
@@ -41,6 +45,20 @@ public class TabFragment extends Fragment {
 			});
 		}
 		return view;
+	}
+	
+	/*
+	 * Îª+°´Å¥Ìí¼Ó¼àÌýÆ÷
+	 */
+	class AddbuttonClickListner implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v) {
+			Intent addintent=new Intent(getActivity(), Add_Click_Activity.class);
+			startActivity(addintent);
+		}
+		
 	}
 	
 	public void setSelecteditem(int index) {

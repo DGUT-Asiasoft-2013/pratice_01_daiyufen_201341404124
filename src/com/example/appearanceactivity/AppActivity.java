@@ -33,6 +33,7 @@ public class AppActivity extends Activity {
 			@Override
 			public void OnTabSelected(int index) {
 				ChangeContentFrament(index);
+				overridePendingTransition(R.anim.slide_in_bottom, 0);
 			}
 		});
 	}
