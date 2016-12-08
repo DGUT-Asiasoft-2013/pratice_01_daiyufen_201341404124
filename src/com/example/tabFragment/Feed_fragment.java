@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -65,6 +66,7 @@ public class Feed_fragment extends Fragment {
 	class FeedAdapter extends BaseAdapter
 	{
 
+		ViewHolde viewHolde;
 		@Override
 		public int getCount() {
 			return ab==null? 0:ab.length;
@@ -82,7 +84,8 @@ public class Feed_fragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View feedview;
+			
+			viewHolde=new ViewHolde();             //创建ViewHolde对象
 			//String[] ab=new String[] {"A","B","C","D","E","F","G","HI","JK","L","M","N"
 				//	,"O","P","Q","R","S","T","U","V","W","X","YZ"};
 			if (convertView==null) {
@@ -90,23 +93,30 @@ public class Feed_fragment extends Fragment {
 				//获得inflater对象，为下面的feedview获得layout做准备
 				LayoutInflater inflater=LayoutInflater.from(parent.getContext());
 				//为feedview设置布局
-				feedview=inflater.inflate(android.R.layout.simple_list_item_1, null);
+				convertView=inflater.inflate(R.layout.chart_left_page, null);
+				//为用户的组件提供id
+				viewHolde.userimage=(ImageView) convertView.findViewById(R.id.left_men);
+				viewHolde.userName=(TextView) convertView.findViewById(R.id.left_name);
+				viewHolde.userContent=(TextView) convertView.findViewById(R.id.content_textview);
+				convertView.setTag(1);
 				
 			}
 			else {
-				feedview=convertView;
+				convertView.getTag();
 			}
-			TextView tView;
-			tView=(TextView) feedview.findViewById(android.R.id.text1);
-			/*for (int i = 0; i < position; i++) {
-				tView.setText(ab[position]);
-				
-			}*/
-			
-			tView.setText(ab[position]);
-			return feedview;
+			viewHolde.userimage.setBackgroundResource(R.drawable.women);
+			viewHolde.userName.setText("信息");
+			viewHolde.userContent.setText("这是聊天界面");
+			return convertView;
 	
 		}
 		
+	}
+	
+	class ViewHolde
+	{
+		ImageView userimage;
+		TextView userName;
+		TextView userContent;
 	}
 }

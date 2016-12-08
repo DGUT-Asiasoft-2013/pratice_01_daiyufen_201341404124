@@ -15,7 +15,10 @@ public class Add_Click_Activity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_edittext_activity);
+//		add_commit_btn=(Button) findViewById(R.id.add_commit_btn);
+//		add_edittext=(EditText) findViewById(R.id.add_editext);
 		init();
+		add_commit_btn.setOnClickListener(new AddCommitClickListener());
 		
 	}
 	public void init() {
@@ -32,6 +35,8 @@ public class Add_Click_Activity extends Activity {
 			overridePendingTransition(0, R.anim.slide_out_bottom);
 			finish();
 		}
+
+		
 		
 	}
 }

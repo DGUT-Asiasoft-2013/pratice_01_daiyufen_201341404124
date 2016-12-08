@@ -24,7 +24,8 @@ public class TabFragment extends Fragment {
 		feed_tabs=view.findViewById(R.id.tab_feed);
 		note_tabs=view.findViewById(R.id.tab_note);
 		add_btn=view.findViewById(R.id.add_btn);
-		add_btn.setOnClickListener(new AddbuttonClickListner());  //ÉèÖÃ¼àÌıÆ÷
+		//ÉèÖÃ¼àÌıÆ÷
+		add_btn.setOnClickListener(new AddbuttonClickListner());  
 		life_tabs=view.findViewById(R.id.tab_life);
 		me_tabs=view.findViewById(R.id.tab_me);
 		
