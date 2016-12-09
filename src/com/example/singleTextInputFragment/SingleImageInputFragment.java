@@ -1,5 +1,7 @@
 package com.example.singleTextInputFragment;
 
+import java.io.ByteArrayOutputStream;
+
 import com.example.appearanceactivity.R;
 
 import android.app.Activity;
@@ -7,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -40,6 +43,10 @@ public class SingleImageInputFragment extends SingleAbstractSourse {
 			}
 		});
 		return rootView;
+	}
+	byte[] pngData;
+	public byte[] getPngData() {
+		return pngData;
 	}
 	
 	void onImageViewClicked(){
@@ -81,7 +88,15 @@ public class SingleImageInputFragment extends SingleAbstractSourse {
 		itnt.setType("image/*");
 		startActivityForResult(itnt, PHOTO);
 	}
+	
+	 void saveBitmap(Bitmap bitmap) {
 
+		 ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+		 bitmap.compress(CompressFormat.PNG, 100, byteArrayOutputStream);
+		 pngData=byteArrayOutputStream.toByteArray();
+	}
+
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(resultCode == Activity.RESULT_CANCELED) return;

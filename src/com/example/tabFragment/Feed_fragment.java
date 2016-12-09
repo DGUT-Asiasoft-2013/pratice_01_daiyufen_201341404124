@@ -98,14 +98,14 @@ public class Feed_fragment extends Fragment {
 				viewHolde.userimage=(ImageView) convertView.findViewById(R.id.left_men);
 				viewHolde.userName=(TextView) convertView.findViewById(R.id.left_name);
 				viewHolde.userContent=(TextView) convertView.findViewById(R.id.content_textview);
-				convertView.setTag(1);
+				convertView.setTag(viewHolde);
 				
 			}
 			else {
-				convertView.getTag();
+				viewHolde=(ViewHolde) convertView.getTag();
 			}
 			viewHolde.userimage.setBackgroundResource(R.drawable.women);
-			viewHolde.userName.setText("信息");
+			viewHolde.userName.setText("小雨");
 			viewHolde.userContent.setText("这是聊天界面");
 			return convertView;
 	

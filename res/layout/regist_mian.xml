@@ -19,6 +19,17 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             tools:layout="@layout/singleinput_fragment" />
+        
+        <fragment
+            android:id="@+id/fragment_name"
+            android:name="com.example.singleTextInputFragment.SingleTextViewInputFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            tools:layout="@layout/singleinput_fragment" />
+        
 
         <fragment
             android:id="@+id/fragment_two"
@@ -57,6 +68,7 @@
             android:layout_alignBottom="@+id/fragment_three"
             android:layout_centerHorizontal="true"
             tools:layout="@layout/fragment_image_main" />
+        
 
         <Button
             android:id="@+id/commit"

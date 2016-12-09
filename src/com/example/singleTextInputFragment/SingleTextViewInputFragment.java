@@ -4,6 +4,7 @@ import com.example.appearanceactivity.R;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,12 @@ public class SingleTextViewInputFragment extends SingleAbstractSourse {
 	
 	public void setinputSingleTextHintLabel(String hintlabel) {
 		tv.setHint(hintlabel);
+		
+	}
+	
+	//·µ»Ø±à¼­¿òµÄÄÚÈÝ
+	public String getText() {
+		return ed.getText().toString();
 		
 	}
 	

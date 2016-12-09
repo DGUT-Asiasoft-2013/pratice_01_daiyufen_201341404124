@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 		//创建客户端
 		OkHttpClient client=new OkHttpClient();
 		//创建请求
-		String string = "http://172.27.0.5:8080/menbercenter/hello";
+		String string = "http://172.27.0.5:8080/membercenter/api/hello";
 		Request request=new Request.Builder().url(string).method("get", null).build();
 		//客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息
 		client.newCall(request).enqueue(new Callback() {
@@ -54,7 +54,12 @@ public class MainActivity extends Activity {
 					
 					@Override
 					public void run() {
-						Toast.makeText(MainActivity.this, arg1.toString(), Toast.LENGTH_SHORT).show();
+						try {
+							Toast.makeText(MainActivity.this, arg1.body().string(), Toast.LENGTH_SHORT).show();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						Intent intent=new Intent(MainActivity.this, LoginActivity.class);
 						startActivity(intent);
 						finish();

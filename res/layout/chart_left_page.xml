@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    
+    android:orientation="horizontal"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/mageView_left"
         android:layout_width="80dp"
         android:layout_height="80dp"
@@ -15,29 +15,35 @@
             android:id="@+id/left_men"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-             />
+            android:layout_above="@+id/left_name"
+            android:layout_alignParentTop="true"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/left_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#ff0" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/mageView_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/mageView_left"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/mageView_left"
-         >
-        
+        android:layout_alignBottom="@+id/mageView_left"
+        android:layout_toRightOf="@id/mageView_left" >
+
         <TextView
             android:id="@+id/content_textview"
-             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
