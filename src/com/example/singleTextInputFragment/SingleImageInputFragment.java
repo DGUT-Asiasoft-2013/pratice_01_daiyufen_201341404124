@@ -91,7 +91,9 @@ public class SingleImageInputFragment extends SingleAbstractSourse {
 	
 	 void saveBitmap(Bitmap bitmap) {
 
+		 //获得数组输出流
 		 ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+		 //只有png格式的图片才可以
 		 bitmap.compress(CompressFormat.PNG, 100, byteArrayOutputStream);
 		 pngData=byteArrayOutputStream.toByteArray();
 	}
@@ -106,11 +108,13 @@ public class SingleImageInputFragment extends SingleAbstractSourse {
 
 			Bitmap bmp = (Bitmap)data.getExtras().get("data");
 			imageView.setImageBitmap(bmp);
+			saveBitmap(bmp);
 		}else if(requestCode == PHOTO){
 			//相片
 			try {
 				Bitmap bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
 				imageView.setImageBitmap(bmp);
+				saveBitmap(bmp);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -48,7 +48,7 @@ public class RegistActivity extends Activity {
 		fragment_repeat_password=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_three);
 		fragment_email=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_five);
 		fragment_name=(SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_name);
-		
+		fragment_image=(SingleImageInputFragment) getFragmentManager().findFragmentById(R.id.fragment_four);
 	
 		commit_btn=(Button) findViewById(R.id.commit);
 		commit_btn.setOnClickListener(new OnClickListener() {
@@ -92,6 +92,7 @@ public class RegistActivity extends Activity {
 		
 		//创建客户端
 		OkHttpClient client=new OkHttpClient();
+		//把用户注册的信息传给服务器中标记好的String类型中
 		MultipartBody.Builder body=new MultipartBody.Builder()
 				.setType(MultipartBody.FORM)
 				.addFormDataPart("num", num)
@@ -99,12 +100,12 @@ public class RegistActivity extends Activity {
 				.addFormDataPart("email", email)
 				.addFormDataPart("name", name);
 		
-		/*if (fragment_image.getPngData()!=null) {
+		if (fragment_image.getPngData()!=null) {
 			body.addFormDataPart("avatar", "avatar",
 					RequestBody.create(MediaType.parse("image/png")
 							, fragment_image.getPngData()));
 			
-		}*/
+		}
 		//创建请求
 		Request request=new Request.Builder()
 				.url("http://172.27.0.5:8080/membercenter/api/register")
@@ -125,7 +126,6 @@ public class RegistActivity extends Activity {
 						//取消进度提示框
 						progressDialog.dismiss();
 						RegistActivity.this.onResponse(arg0,arg1.body().toString());
-						
 					}
 				});
 			}

@@ -30,6 +30,8 @@
             android:layout_marginBottom="10dp"
             tools:layout="@layout/singleinput_fragment" />
         
+        
+        
 
         <fragment
             android:id="@+id/fragment_two"
@@ -69,6 +71,8 @@
             android:layout_centerHorizontal="true"
             tools:layout="@layout/fragment_image_main" />
         
+        
+       
 
         <Button
             android:id="@+id/commit"
