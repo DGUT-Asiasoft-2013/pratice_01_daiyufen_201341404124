@@ -1,7 +1,5 @@
 package com.example.tabFragment;
 
-import java.io.Serializable;
-
 public class User{
 	
 	String account;
@@ -9,7 +7,7 @@ public class User{
 	String name;
 	String avatar;
 	String email;
-	String id;
+	private Integer id;
 	public String getAccount() {
 		return account;
 	}
@@ -40,11 +38,11 @@ public class User{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 }

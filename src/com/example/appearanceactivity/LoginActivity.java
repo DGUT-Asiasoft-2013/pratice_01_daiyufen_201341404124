@@ -2,6 +2,7 @@ package com.example.appearanceactivity;
 
 import java.io.IOException;
 
+import com.example.servelet.Servelet;
 import com.example.tabFragment.User;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -94,9 +95,10 @@ public class LoginActivity extends Activity {
 		// 开始
 		progressDialog.show();
 
-		// 创建客户端
-		OkHttpClient client = new OkHttpClient();
+		//OkHttpClient client = new OkHttpClient();
 
+		// 创建客户端
+		OkHttpClient client=Servelet.getOkHttpClient();
 		// 把用户登录的信息传给服务器中标记好的String类型中
 		MultipartBody.Builder body = new MultipartBody
 				.Builder()
@@ -104,8 +106,12 @@ public class LoginActivity extends Activity {
 				.addFormDataPart("num", num)
 				.addFormDataPart("password", password);
 		// 创建请求
-		Request request = new Request.Builder()
+		/*Request request = new Request.Builder()
 				.url("http://172.27.0.5:8080/membercenter/api/login")
+				.post(body.build())
+				.build();*/
+		Request request = Servelet
+				.requestBuildApi("login")
 				.post(body.build())
 				.build();
 		// 客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息
