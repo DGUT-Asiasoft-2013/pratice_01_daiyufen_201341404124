@@ -1,64 +1,181 @@
 package com.example.appearanceactivity;
 
+import java.io.IOException;
+
+import com.example.tabFragment.User;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginActivity extends Activity {
 	private Button regist_btn;
 	private Button login_btn;
-	
-	private TextView forget_password_tv;
-	
-	
-	
+
+	private TextView forget_password_tv; // 忘记密码
+	private EditText num_ed;
+	private EditText password_ed;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_mian);
-		regist_btn=(Button) findViewById(R.id.button2);
-		login_btn=(Button) findViewById(R.id.button1);
-		
-		forget_password_tv=(TextView) findViewById(R.id.forget_tv);
+
+		init(); // 初始化
 		forget_password_tv.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Forget_password();
 			}
 		});
-		
-		
+
 		regist_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(LoginActivity.this, RegistActivity.class);
+				Intent intent = new Intent(LoginActivity.this, RegistActivity.class);
 				startActivity(intent);
 			}
 		});
-		
+
 		login_btn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent intent1=new Intent(LoginActivity.this, AppActivity.class);
-				startActivity(intent1);
+				Login_into();
+
 			}
 		});
 	}
 
+	public void init() {
+
+		regist_btn = (Button) findViewById(R.id.button2);
+		login_btn = (Button) findViewById(R.id.button1);
+
+		num_ed = (EditText) findViewById(R.id.number);
+		password_ed = (EditText) findViewById(R.id.password_ed);
+
+		forget_password_tv = (TextView) findViewById(R.id.forget_tv);
+	}
+
+	protected void Login_into() {
+		// 获得账户
+		String num = num_ed.getText().toString();
+		// 获得密码
+		String password = password_ed.getText().toString();
+
+		// 以下为进度提示框
+		final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+		progressDialog.setTitle("登录中");
+		progressDialog.setMessage("请稍后");
+		progressDialog.setCancelable(false); // 设置其不能取消
+		progressDialog.setCanceledOnTouchOutside(false);
+		// 开始
+		progressDialog.show();
+
+		// 创建客户端
+		OkHttpClient client = new OkHttpClient();
+
+		// 把用户登录的信息传给服务器中标记好的String类型中
+		MultipartBody.Builder body = new MultipartBody
+				.Builder()
+				.setType(MultipartBody.FORM)
+				.addFormDataPart("num", num)
+				.addFormDataPart("password", password);
+		// 创建请求
+		Request request = new Request.Builder()
+				.url("http://172.27.0.5:8080/membercenter/api/login")
+				.post(body.build())
+				.build();
+		// 客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息
+		client.newCall(request).enqueue(new Callback() {
+
+			@Override
+			public void onResponse(Call arg0, final Response arg1) throws IOException {
+				
+				
+				LoginActivity.this.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						//获得解析数据
+						User user;
+						try {
+							progressDialog.dismiss();
+							ObjectMapper objectMapper=new ObjectMapper();
+							user = objectMapper.readValue(arg1.body().string(), User.class);
+							new AlertDialog.Builder(LoginActivity.this)
+							.setTitle("登录成功")
+							.setMessage(user.getName()+","+user.getAccount())
+							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+								
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									Intent intent=new Intent(LoginActivity.this, AppActivity.class);
+									startActivity(intent);
+									finish();
+								}
+							})
+							.show();
+						} catch (JsonParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JsonMappingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						
+						
+
+					}
+				});
+			}
+
+			@Override
+			public void onFailure(Call arg0, final IOException arg1) {
+				LoginActivity.this.runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						progressDialog.dismiss();
+						Toast.makeText(LoginActivity.this, arg1.toString(), Toast.LENGTH_SHORT).show();
+
+					}
+				});
+			}
+		});
+
+	}
+
 	protected void Forget_password() {
-		Intent forget_intent=new Intent(LoginActivity.this,ForgetPassord_Activity.class);
+		Intent forget_intent = new Intent(LoginActivity.this, ForgetPassord_Activity.class);
 		startActivity(forget_intent);
 		finish();
 	}
 
-	
 }
