@@ -29,7 +29,7 @@ public class Servelet {
 	/*
 	 * 设置方法，封装网址，使得每次调用网址都只需要添加后缀即可
 	 */
-	public static Request.Builder  requestBuildApi(String api)
+	public static Request.Builder  requestuildApi(String api)
 	{
 		return new Request.Builder().url("http://172.27.0.5:8080/membercenter/api/"+api);
 		
