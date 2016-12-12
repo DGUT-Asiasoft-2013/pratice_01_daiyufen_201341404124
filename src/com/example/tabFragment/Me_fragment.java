@@ -2,29 +2,20 @@ package com.example.tabFragment;
 
 import java.io.IOException;
 
-import com.example.appearanceactivity.AppActivity;
-import com.example.appearanceactivity.LoginActivity;
 import com.example.appearanceactivity.R;
 import com.example.servelet.Servelet;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.example.widget.view.getImage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -33,6 +24,7 @@ public class Me_fragment extends Fragment {
 
 	View view;
 	private TextView tv;
+	private com.example.widget.view.getImage image;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +32,7 @@ public class Me_fragment extends Fragment {
 
 			view = inflater.inflate(R.layout.me_frament, null);
 			tv = (TextView) view.findViewById(R.id.textView1);
+			image=(getImage) view.findViewById(R.id.getimage);
 
 		}
 		return view;

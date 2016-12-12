@@ -4,18 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
-        <TextView
-            android:id="@+id/add_textView"
+        <EditText
+            android:id="@+id/add_top_EditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="80dp"
-            android:text="@string/message"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/add_commit_btn"
+            android:hint="@string/title"
             android:textColor="@android:color/holo_blue_bright"
             android:textSize="20sp" />
 
@@ -23,16 +23,17 @@
             android:id="@+id/add_commit_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:text="@string/com" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <EditText
-        android:id="@+id/add_editext"
+        android:id="@+id/add_bottom_editext"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="请输入字体"
+        android:hint="请输入内容"
         android:textSize="20sp" />
 
     

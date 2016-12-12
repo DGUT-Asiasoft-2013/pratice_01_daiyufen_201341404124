@@ -5,16 +5,20 @@ import java.io.IOException;
 import com.example.servelet.Servelet;
 import com.example.singleTextInputFragment.ForgetPasswordFragment;
 import com.example.singleTextInputFragment.SingleTextViewInputFragment;
+import com.example.tabFragment.News_fragment;
 import com.example.widget.view.MD5;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MultipartBody;
@@ -24,21 +28,26 @@ import okhttp3.Response;
 
 public class forget_two_page_Activity extends Activity {
 
-	SingleTextViewInputFragment forget_emial; // 验证码
-
-	ForgetPasswordFragment for_fragment;
+	SingleTextViewInputFragment forget_emial;// 验证码
 
 	SingleTextViewInputFragment forget_password; // 输入新密码
 	SingleTextViewInputFragment forget_repeat_password; // 重新输入新密码
 
 	private Button commit_btn; // 提交按钮
-
+	String email;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// retrive the email address from intent.extra
+		email=getIntent().getStringExtra("email");
 		setContentView(R.layout.two_page_forget);
 		initabb();
+		
+			
 	}
+	
+	
 
 	public void initabb() {
 		forget_emial = (SingleTextViewInputFragment) getFragmentManager().findFragmentById(R.id.fragment_forget_email);
@@ -86,24 +95,50 @@ public class forget_two_page_Activity extends Activity {
 		// 创建客户端
 		OkHttpClient client = Servelet.getOkHttpClient();
 		// 把用户设置密码的信息传给服务器中标记好的String类型中
-		MultipartBody.Builder body = new MultipartBody.Builder()
+		MultipartBody body = new MultipartBody.Builder()
 				.setType(MultipartBody.FORM)
-				.addFormDataPart("emial", for_fragment.getText())
-				.addFormDataPart("password", MD5.getMD5(forget_password.getText()));
+				.addFormDataPart("email", email)            //左边的email是对应服务器的
+				.addFormDataPart("password", forget_password.getText()).build();
+				//.addFormDataPart("password", MD5.getMD5(forget_password.getText()));
 		// 创建请求
-		Request request = Servelet.requestuildApi("email").post(body.build()).build();
+		Request request = Servelet.requestuildApi("email").post(body).build();
 
 		client.newCall(request).enqueue(new Callback() {
 
 			@Override
-			public void onResponse(Call arg0, Response arg1) throws IOException {
-
-				forget_two_page_Activity.this.onResponse(arg0, arg1.body().string());
+			public void onResponse(final Call arg0, Response arg1) throws IOException {
+				try{
+					//创建一个Boolean类型的值
+					final Boolean succeed = new ObjectMapper().readValue(arg1.body().string(), Boolean.class);
+					//runOnUiThread()代替Handle,即Activity.runOnUiThread(Runnable)，相当于主线程，可以在此更新UI
+					runOnUiThread(new Runnable() {
+						public void run() {
+							if (succeed) {
+								forget_two_page_Activity.this.onResponse(arg0, "succeed is true");
+							}else{
+								forget_two_page_Activity.this.onFailure(arg0, new Exception("succeed if false"));
+							}
+						}
+					});
+				}catch(final Exception e){
+					runOnUiThread(new Runnable() {
+						public void run() {
+							forget_two_page_Activity.this.onFailure(arg0, e);
+						}
+					});
+				}
+				
+				//forget_two_page_Activity.this.onResponse(arg0, arg1.body().string());
+				//Toast.makeText(forget_two_page_Activity.this, arg1.body().string(), Toast.LENGTH_SHORT).show();
+//				Intent intent = new Intent(forget_two_page_Activity.this, LoginActivity.class);
+//				startActivity(intent);
+//				finish();
 			}
 
 			@Override
 			public void onFailure(Call arg0, IOException arg1) {
-				forget_two_page_Activity.this.onFailure(arg0, arg1);
+				//forget_two_page_Activity.this.onFailure(arg0, arg1);
+				//Toast.makeText(forget_two_page_Activity.this, arg1.toString(), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -121,14 +156,14 @@ public class forget_two_page_Activity extends Activity {
 				startActivity(intent);
 				finish();
 			}
-		})
-		.show();
+		}).show();
 	}
+	
 	void onFailure(Call arg0, Exception arg1)
 	{
 		new AlertDialog.Builder(forget_two_page_Activity.this)
 		.setTitle("提交失败")
-		.setMessage("您提交信息失败")
+		.setMessage(arg1.getMessage())                  //arg1.getMessage()会输出HTML文件用于显示错误
 		.setPositiveButton("确定",null)
 		.show();
 	}

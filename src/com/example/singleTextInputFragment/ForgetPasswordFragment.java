@@ -48,13 +48,14 @@ public class ForgetPasswordFragment extends Fragment {
 
 	protected void GotoNext() {
 		Intent i=new Intent(getActivity(), forget_two_page_Activity.class);
-		startActivity(i);
-		
+		// extra pass the email address
+		i.putExtra("email", forget_email.getText());
+		startActivity(i);		
 	}
 	
-	public String getText() {
+	/*public String getText() {
 		return forget_email.getText();
-	}
+	}*/
 	
 	
 }
