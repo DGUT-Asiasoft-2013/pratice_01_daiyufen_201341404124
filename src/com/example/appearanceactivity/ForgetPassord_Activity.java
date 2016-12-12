@@ -18,7 +18,6 @@ public class ForgetPassord_Activity extends Activity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 	}
 }

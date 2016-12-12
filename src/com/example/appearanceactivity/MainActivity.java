@@ -2,6 +2,8 @@ package com.example.appearanceactivity;
 
 import java.io.IOException;
 
+import com.example.servelet.Servelet;
+
 import android.app.Activity;
 import okhttp3.Request;
 import okhttp3.Request.Builder;
@@ -25,33 +27,36 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		/*//创建延时，然后转到登陆界面
-		new Handler().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				Intent intent=new Intent(MainActivity.this, LoginActivity.class);
-				startActivity(intent);
-				finish();
-			}
-		}, 2000);*/
-		
 		/*
-		 *以下为连接网路操作
+		 * //创建延时，然后转到登陆界面 new Handler().postDelayed(new Runnable() {
+		 * 
+		 * @Override public void run() { Intent intent=new
+		 * Intent(MainActivity.this, LoginActivity.class);
+		 * startActivity(intent); finish(); } }, 2000);
 		 */
-		//创建客户端
-		OkHttpClient client=new OkHttpClient();
-		//创建请求
-		String string = "http://172.27.0.5:8080/membercenter/api/hello";
-		Request request=new Request.Builder().url(string).method("get", null).build();
-		//客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息
+
+		/*
+		 * 以下为连接网路操作
+		 */
+		// 创建客户端
+		// OkHttpClient client=new OkHttpClient();
+		OkHttpClient client = Servelet.getOkHttpClient();
+		// 创建请求
+		String string = "http://172.27.0.37:8080/membercenter/api/hello";
+		// Request request=new Request.Builder().url(string).method("get",
+		// null).build();
+		Request request = Servelet.requestuildApi("hello")
+				.method("get",null)
+				// .post(body.build())
+				.build();
+		// 客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息
 		client.newCall(request).enqueue(new Callback() {
-			
+
 			@Override
 			public void onResponse(Call arg0, final Response arg1) throws IOException {
-				//成功的时候返回数据
+				// 成功的时候返回数据
 				MainActivity.this.runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						try {
@@ -60,28 +65,28 @@ public class MainActivity extends Activity {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+						Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 						startActivity(intent);
 						finish();
 					}
 				});
 			}
-			
+
 			@Override
 			public void onFailure(Call arg0, final IOException arg1) {
-				//失败的时候
+				// 失败的时候
 				MainActivity.this.runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						Toast.makeText(MainActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
-						Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+						Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 						startActivity(intent);
 						finish();
 					}
-				});				
+				});
 			}
 		});
-		
+
 	}
 }

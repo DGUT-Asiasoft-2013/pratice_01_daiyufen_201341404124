@@ -107,11 +107,11 @@ public class LoginActivity extends Activity {
 				.addFormDataPart("password", password);
 		// 创建请求
 		/*Request request = new Request.Builder()
-				.url("http://172.27.0.5:8080/membercenter/api/login")
+				.url("http://172.27.0.37:8080/membercenter/api/login")
 				.post(body.build())
 				.build();*/
 		Request request = Servelet
-				.requestBuildApi("login")
+				.requestuildApi("login")
 				.post(body.build())
 				.build();
 		// 客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息

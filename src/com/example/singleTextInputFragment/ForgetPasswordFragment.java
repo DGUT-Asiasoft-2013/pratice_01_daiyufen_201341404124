@@ -52,5 +52,9 @@ public class ForgetPasswordFragment extends Fragment {
 		
 	}
 	
+	public String getText() {
+		return forget_email.getText();
+	}
+	
 	
 }

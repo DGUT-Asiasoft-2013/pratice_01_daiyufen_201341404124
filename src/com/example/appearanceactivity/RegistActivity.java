@@ -2,6 +2,7 @@ package com.example.appearanceactivity;
 
 import java.io.IOException;
 
+import com.example.servelet.Servelet;
 import com.example.singleTextInputFragment.SingleImageInputFragment;
 import com.example.singleTextInputFragment.SingleTextViewInputFragment;
 
@@ -91,7 +92,8 @@ public class RegistActivity extends Activity {
 		progressDialog.show();
 		
 		//创建客户端
-		OkHttpClient client=new OkHttpClient();
+//		OkHttpClient client=new OkHttpClient();
+		OkHttpClient client=Servelet.getOkHttpClient();
 		//把用户注册的信息传给服务器中标记好的String类型中
 		MultipartBody.Builder body=new MultipartBody.Builder()
 				.setType(MultipartBody.FORM)
@@ -107,8 +109,13 @@ public class RegistActivity extends Activity {
 			
 		}
 		//创建请求
-		Request request=new Request.Builder()
-				.url("http://172.27.0.5:8080/membercenter/api/register")
+		/*Request request=new Request.Builder()
+				.url("http://172.27.0.37:8080/membercenter/api/register")
+				.method("post", null)
+				.post(body.build())
+				.build();*/
+		Request request = Servelet
+				.requestuildApi("register")
 				.method("post", null)
 				.post(body.build())
 				.build();

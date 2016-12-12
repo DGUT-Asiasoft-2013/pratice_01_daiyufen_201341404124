@@ -59,7 +59,7 @@ public class Me_fragment extends Fragment {
 		 * .url("http://172.27.0.5:8080/membercenter/api/login")
 		 * .post(body.build()) .build();
 		 */
-		Request request = Servelet.requestBuildApi("me")
+		Request request = Servelet.requestuildApi("me")
 				//.post(body.build())
 				.build();
 		// 客户端发送一个请求newCall（），然后enqueue()进去对列，最后Callback()发送回连接的成功与否的信息
