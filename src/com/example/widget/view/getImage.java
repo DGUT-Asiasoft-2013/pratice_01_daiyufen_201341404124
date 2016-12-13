@@ -48,6 +48,10 @@ public class getImage extends View {
 	Handler handler=new Handler();
 	
 	public void setBitmap(Bitmap bitmap) {
+		if (bitmap==null) {
+			return;
+			
+		}
 		paint=new Paint();
 		//…Ë÷√“ı”∞
 		paint.setShader(new BitmapShader(bitmap, TileMode.CLAMP, TileMode.REPEAT));
