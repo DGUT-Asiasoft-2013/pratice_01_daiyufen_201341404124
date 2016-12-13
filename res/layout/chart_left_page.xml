@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal" >
 
     <RelativeLayout
         android:id="@+id/mageView_left"
@@ -24,26 +23,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#ff0" />
-
+            android:background="#ff0"
+            android:gravity="center_horizontal" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/mageView_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignBottom="@+id/mageView_left"
-        android:layout_toRightOf="@id/mageView_left" >
+        android:layout_toRightOf="@id/mageView_left"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"/>
 
         <TextView
             android:id="@+id/content_textview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1" />
+            android:layout_height="59dp"
+            android:gravity="center"
+            android:text="sssssffffv"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

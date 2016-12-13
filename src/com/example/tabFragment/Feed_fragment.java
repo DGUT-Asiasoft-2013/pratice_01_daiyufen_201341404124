@@ -1,19 +1,24 @@
 package com.example.tabFragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.example.appearanceactivity.FeedListViewActivity;
 import com.example.appearanceactivity.R;
 import com.example.servelet.Servelet;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,21 +33,26 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Feed_fragment extends Fragment {
-	
+
 	private ListView feed_listv;
 	View view;
-	String[] ab;
-	String[] image;     //用户头像
-	String[] title;      //文章标题
-	String[] text;        //文章内容
-	//FeedAdapter adapter=new FeedAdapter();
+	View loadMorebtn;        //底端按钮布局
+	TextView load_tv;
+	List<Article> ab= new ArrayList<Article>();
+	protected int page;
+
+	FeedAdapter feedAdapter;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (view==null) {
-			
-			view=inflater.inflate(R.layout.feed_frament, null);
-			feed_listv=(ListView) view.findViewById(R.id.feed_listView);
-			
+		if (view == null) {
+
+			view = inflater.inflate(R.layout.feed_frament, null);
+			loadMorebtn=inflater.inflate(R.layout.chart_buttom_page, null);
+			load_tv=(TextView) loadMorebtn.findViewById(R.id.tv);
+			feed_listv = (ListView) view.findViewById(R.id.feed_listView);
+			//ab=new ArrayList<Article>();
+			feed_listv.addFooterView(loadMorebtn);                //把这个btn放在底端必须在setAdapter之前完成
+
 			feed_listv.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
@@ -50,64 +60,149 @@ public class Feed_fragment extends Fragment {
 					OnItemSelected(position);
 				}
 			});
-			//创建随机数对象
-			Random random=new Random();
-			ab=new String[10+random.nextInt()%20];
-			image=new String[10+random.nextInt()%20];
-			title=new String[10+random.nextInt()%20];
-			text=new String[10+random.nextInt()%20];
-			for (int i = 0; i < ab.length; i++) {
-				ab[i]="第"+random.nextInt()+"行";             //为ab数组添加随机数
-			}
-			//添加监听器
-			feed_listv.setAdapter(new FeedAdapter());
+			
+			loadMorebtn.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					AgainLoad();
+				}
+			});
+			feedAdapter=new FeedAdapter();
+			// 添加监听器
+			feed_listv.setAdapter(feedAdapter);
 		}
 		return view;
 	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		//获得客户端
+
+	protected void AgainLoad() {
+		//点击后就设置不可再按了
+		loadMorebtn.setEnabled(false);
+		load_tv.setText("加载中");
+		 //获得客户端
 		OkHttpClient client=Servelet.getOkHttpClient();
 		//获得请求
-		Request request=Servelet.requestuildApi("feeds").build();
-		
-		//发起请求
+		Request request=Servelet.requestuildApi("feeds/"+(page+1)).get().build();
 		client.newCall(request).enqueue(new Callback() {
 			
 			@Override
 			public void onResponse(Call arg0, Response arg1) throws IOException {
-				final Article article;
-				ObjectMapper objectMapper=new ObjectMapper();
-				//把解析出来的用户内容放进article中
-				article=objectMapper.readValue(arg1.body().string(), Article.class);
 				getActivity().runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
-						for (int i = 0; i < image.length; i++) {
-							image[i]=article.getAuthorImage();
-						}
-						
-						for (int j = 0; j < title.length; j++) {
-							title[j]=article.getTitle();
-						}
-						for (int n = 0; n < text.length; n++) {
-							text[n]=article.getText();
-							
-						}
+						loadMorebtn.setEnabled(true);
+						load_tv.setText("加载更多");
 					}
 				});
+				
+				try {
+					ObjectMapper objectMapper=new ObjectMapper();
+					final Page<Article> page=objectMapper.readValue(arg1.body().string(), new TypeReference<Page<Article>>() {
+					});
+					if (page.getNumber()>Feed_fragment.this.page) {
+						if (ab==null) {
+							//判断列表是否为空，如果为空，则把解析的数据赋值给列表
+							ab=page.getContent();
+							
+						}
+						else {
+							ab.addAll(page.getContent());
+						}
+						
+						
+						getActivity().runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								Feed_fragment.this.page=page.getNumber();     //把当前的页数赋值给int类型的page
+								//刷新adapter
+								feedAdapter.notifyDataSetInvalidated();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 			@Override
 			public void onFailure(Call arg0, IOException arg1) {
-				onFailure(arg0, arg1);
+
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						loadMorebtn.setEnabled(true);
+						load_tv.setText("加载更多");
+					}
+				});
+				
 			}
 		});
-		
-		
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		load();
+
+	}
+
+	public void load() {
+		          //获得客户端
+				OkHttpClient client=Servelet.getOkHttpClient();
+				//获得请求
+				Request request=Servelet.requestuildApi("feeds").get().build();
+				
+				//发起请求
+				client.newCall(request).enqueue(new Callback() {
+					
+					@Override
+					public void onResponse(Call arg0, Response arg1) throws IOException {
+//						final Article article;
+						try {
+							final Page<Article> page;
+							ObjectMapper objectMapper=new ObjectMapper();
+							//把解析出来的用户内容放进article中
+							page=objectMapper.readValue(arg1.body().string(), new TypeReference<Page<Article>>() {
+							});
+							
+							
+							getActivity().runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									//把解析下来的页数传给Feed_Fragment
+									Feed_fragment.this.page=page.getNumber();
+									//把解析下来的数据传给list
+									Feed_fragment.this.ab=page.getContent();
+									//刷新
+									feedAdapter.notifyDataSetInvalidated();
+								}
+							});
+						} catch (final Exception e) {
+							getActivity().runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									
+									new AlertDialog.Builder(getActivity())
+									.setTitle("失败111")
+									.setMessage(e.toString())
+									.show();
+								}
+							});
+							
+						}
+						
+					}
+					
+					@Override
+					public void onFailure(Call arg0, IOException arg1) {
+						onFailure(arg0, arg1);
+					}
+				});
 	}
 	
 	public void onFailure(Call arg0, Exception arg1)  {
@@ -116,13 +211,13 @@ public class Feed_fragment extends Fragment {
 		.setMessage(arg1.toString())
 		.show();
 	}
-	
-	public void OnItemSelected(int position) 
-	 {
-		String content=ab[position];     //获得content内容
-		Intent intent=new Intent(getActivity(), FeedListViewActivity.class);
-		
-		//把数据传入intent中去
+
+	public void OnItemSelected(int position) {
+		Article article = ab.get(position);
+		String content = article.getAuthorName()+":"+article.getText(); // 获得content内容
+		Intent intent = new Intent(getActivity(), FeedListViewActivity.class);
+
+		// 把数据传入intent中去
 		intent.putExtra("cont", content);
 		startActivity(intent);
 	}
@@ -130,18 +225,18 @@ public class Feed_fragment extends Fragment {
 	/*
 	 * 为listview设置监听器
 	 */
-	class FeedAdapter extends BaseAdapter
-	{
+	class FeedAdapter extends BaseAdapter {
 
 		ViewHolde viewHolde;
+
 		@Override
 		public int getCount() {
-			return ab==null? 0:ab.length;
+			return ab == null ? 0 : ab.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return ab[position];
+			return ab.get(position);
 		}
 
 		@Override
@@ -151,39 +246,40 @@ public class Feed_fragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			
-			viewHolde=new ViewHolde();             //创建ViewHolde对象
-			//String[] ab=new String[] {"A","B","C","D","E","F","G","HI","JK","L","M","N"
-				//	,"O","P","Q","R","S","T","U","V","W","X","YZ"};
-			if (convertView==null) {
-			
-				//获得inflater对象，为下面的feedview获得layout做准备
-				LayoutInflater inflater=LayoutInflater.from(parent.getContext());
-				//为feedview设置布局
-				convertView=inflater.inflate(R.layout.chart_left_page, null);
-				//为用户的组件提供id
-				viewHolde.userimage=(ImageView) convertView.findViewById(R.id.left_men);
-				viewHolde.userName=(TextView) convertView.findViewById(R.id.left_name);
-				viewHolde.userContent=(TextView) convertView.findViewById(R.id.content_textview);
+
+			viewHolde = new ViewHolde(); // 创建ViewHolde对象
+			if (convertView == null) {
+
+				// 获得inflater对象，为下面的feedview获得layout做准备
+				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+				// 为feedview设置布局
+				convertView = inflater.inflate(R.layout.chart_left_page, null);
+				// 为用户的组件提供id
+				viewHolde.userimage = (ImageView) convertView.findViewById(R.id.left_men);
+				viewHolde.userName = (TextView) convertView.findViewById(R.id.left_name);
+				viewHolde.userContent = (TextView) convertView.findViewById(R.id.content_textview);
+				viewHolde.usertime=(TextView) convertView.findViewById(R.id.time);
 				convertView.setTag(viewHolde);
-				
+
+			} else {
+				viewHolde = (ViewHolde) convertView.getTag();
 			}
-			else {
-				viewHolde=(ViewHolde) convertView.getTag();
-			}
+			Article article=ab.get(position);
 			viewHolde.userimage.setBackgroundResource(R.drawable.women);
-			viewHolde.userName.setText("小雨");
-			viewHolde.userContent.setText("这是聊天界面");
+			viewHolde.userName.setText(article.getAuthorName());
+			viewHolde.userContent.setText(article.getText());
+			String time=DateFormat.format("yyyy-MM-dd hh:mm", article.getCreateDate()).toString();
+			viewHolde.usertime.setText(time);
 			return convertView;
-	
+
 		}
-		
+
 	}
-	
-	class ViewHolde
-	{
+
+	class ViewHolde {
 		ImageView userimage;
 		TextView userName;
 		TextView userContent;
+		TextView usertime;
 	}
 }

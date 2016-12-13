@@ -18,5 +18,6 @@
     <string name="next">下一个</string>
     <string name="com">提交</string>
     <string name="title">下面请输入标题</string>
+    <string name="load">加载更多</string>
 
 </resources>
