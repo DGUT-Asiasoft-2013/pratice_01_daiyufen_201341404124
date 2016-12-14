@@ -1,8 +1,9 @@
 package com.example.tabFragment;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Comment {
+public class Comment implements Serializable{
 
 	String content;       //评论内容
 	User commentor;        //评论者

@@ -32,6 +32,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/*
+ * Feed显示每条文章简介
+ */
 public class Feed_fragment extends Fragment {
 
 	private ListView feed_listv;

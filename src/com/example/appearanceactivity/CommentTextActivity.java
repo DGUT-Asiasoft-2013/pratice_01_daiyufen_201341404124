@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.example.servelet.Servelet;
 import com.example.tabFragment.Article;
 
+import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,6 +20,9 @@ import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/*
+ * 评论编辑提交界面
+ */
 public class CommentTextActivity extends Activity {
 
 	private Button comment_send;
@@ -48,6 +52,9 @@ public class CommentTextActivity extends Activity {
 		
 	}
 
+	/*
+	 * 上传评论
+	 */
 	public void Add_Comment() {
 		//获得评论内容
 		String content=Comment_edit.getText().toString();
@@ -67,10 +74,27 @@ public class CommentTextActivity extends Activity {
 					
 					@Override
 					public void onResponse(final Call arg0, final Response arg1) throws IOException {
+						
 						try {
-							CommentTextActivity.this.onResponse(arg0, arg1.body().string());
-						} catch (Exception e) {
-							e.printStackTrace();
+							//这是后台执行的，在前台执行时必须先把他放在字符串里
+							String ar=arg1.body().string();
+							CommentTextActivity.this.onResponse(arg0, ar);
+						} catch (final Exception e) {
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									new AlertDialog.Builder(CommentTextActivity.this).setTitle("提交失败")
+									.setMessage(e.toString())
+									.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+										
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											Comment_edit.setText("");
+										}
+									}).show();
+								}
+							});
 						}
 					}
 					
