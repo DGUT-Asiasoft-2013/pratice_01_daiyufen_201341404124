@@ -19,5 +19,7 @@
     <string name="com">提交</string>
     <string name="title">下面请输入标题</string>
     <string name="load">加载更多</string>
+    <string name="send">发送</string>
+    <string name="comm">评论</string>
 
 </resources>

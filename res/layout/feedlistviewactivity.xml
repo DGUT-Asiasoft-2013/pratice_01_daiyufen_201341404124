@@ -6,35 +6,19 @@
 
     <TextView
         android:id="@+id/feed_liatview_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="160dp"
-        android:textColor="@android:color/holo_blue_bright"
-        android:textSize="16dp" />
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="#ff0" >
-
-        <Editext
-            android:id="@+id/comment_ed"
-            android:layout_weight="1"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-        </Editext>
-
-        <Button
-            android:id="@+id/comment_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text="发送" />
-
-    </RelativeLayout>
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="16dp" />
+    
+    <Button
+        android:id="@+id/comment_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/comm"/>
+	
+    
 
 </LinearLayout>

@@ -1,8 +1,9 @@
 package com.example.tabFragment;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Article {
+public class Article implements Serializable{
 	/*
 	 * Article里下面的东西一定要与网页上的标签一样
 	 */

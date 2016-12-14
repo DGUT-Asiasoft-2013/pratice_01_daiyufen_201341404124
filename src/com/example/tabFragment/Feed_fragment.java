@@ -216,9 +216,10 @@ public class Feed_fragment extends Fragment {
 		Article article = ab.get(position);
 		String content = article.getAuthorName()+":"+article.getText(); // 获得content内容
 		Intent intent = new Intent(getActivity(), FeedListViewActivity.class);
-
 		// 把数据传入intent中去
-		intent.putExtra("cont", content);
+		//intent.putExtra("cont", content);
+		//必须Article类中实现Serializable才能使用putExtra
+		intent.putExtra("data", article);
 		startActivity(intent);
 	}
 
@@ -264,6 +265,7 @@ public class Feed_fragment extends Fragment {
 			} else {
 				viewHolde = (ViewHolde) convertView.getTag();
 			}
+			//获得某一行的article
 			Article article=ab.get(position);
 			viewHolde.userimage.setBackgroundResource(R.drawable.women);
 			viewHolde.userName.setText(article.getAuthorName());
