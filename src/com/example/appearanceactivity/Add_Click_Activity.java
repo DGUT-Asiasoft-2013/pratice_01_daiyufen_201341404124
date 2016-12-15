@@ -68,13 +68,15 @@ public class Add_Click_Activity extends Activity {
 			
 			@Override
 			public void onResponse(final Call arg0, final Response arg1) throws IOException {
+				//arg1.body().string()不能再主线程里运行
+				final String string=arg1.body().string();
 				Add_Click_Activity.this.runOnUiThread(new Runnable() {
 					
 					@Override
 					public void run() {
 						try {
-							Add_Click_Activity.this.onResponse(arg0, arg1.body().string());
-						} catch (IOException e) {
+							Add_Click_Activity.this.onResponse(arg0, string);
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}

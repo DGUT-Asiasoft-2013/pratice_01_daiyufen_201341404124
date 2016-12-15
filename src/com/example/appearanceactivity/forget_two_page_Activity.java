@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.example.servelet.Servelet;
 import com.example.singleTextInputFragment.ForgetPasswordFragment;
 import com.example.singleTextInputFragment.SingleTextViewInputFragment;
-import com.example.tabFragment.News_fragment;
+import com.example.tabFragment.AllComment_fragment;
 import com.example.widget.view.MD5;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

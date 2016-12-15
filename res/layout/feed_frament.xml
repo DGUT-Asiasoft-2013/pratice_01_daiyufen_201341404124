@@ -10,21 +10,25 @@
         android:layout_gravity="center_horizontal"
         android:background="#1eaefb" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/search_ed"
+            android:layout_width="208dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="2sp"
-            android:text="Feed"
             android:textSize="28sp" />
+
+        <Button
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜索" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:background="@android:color/holo_blue_dark"
-             />
+            android:background="@android:color/holo_blue_dark" />
     </FrameLayout>
 
     <ListView

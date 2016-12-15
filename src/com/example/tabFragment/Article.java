@@ -3,21 +3,25 @@ package com.example.tabFragment;
 import java.io.Serializable;
 import java.util.Date;
 
+import android.R.integer;
+
 public class Article implements Serializable{
 	/*
 	 * Article里下面的东西一定要与网页上的标签一样
 	 */
 
-	Integer id;
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	int id;
+	
+	
 	String title; // 文章标题
 	String text; // 文章内容
 
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	User author; // 文章作者
 	Date createDate; // 文章创建时间
 	Date editDate; // 文章编辑时间

@@ -119,18 +119,20 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void onResponse(Call arg0, final Response arg1) throws IOException {
-				
+				final String string=arg1.body().string();
 				
 				LoginActivity.this.runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						//获得解析数据
-						User user;
 						try {
+							//获得解析数据
+							User user;
 							progressDialog.dismiss();
 							ObjectMapper objectMapper=new ObjectMapper();
-							user = objectMapper.readValue(arg1.body().string(), User.class);
+							
+							user=objectMapper.readValue(string, User.class);
+							
 							new AlertDialog.Builder(LoginActivity.this)
 							.setTitle("登录成功")
 							.setMessage(user.getName()+","+user.getAccount())
@@ -142,21 +144,51 @@ public class LoginActivity extends Activity {
 									startActivity(intent);
 									finish();
 								}
-							})
-							.show();
-						} catch (JsonParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (JsonMappingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+							}).show();
+							
+						} catch (final JsonParseException e) {
+							LoginActivity.this.runOnUiThread(new Runnable() {
 
-						
-						
+								@Override
+								public void run() {
+									progressDialog.dismiss();
+									new AlertDialog.Builder(LoginActivity.this)
+									.setTitle("失败1")
+									.setMessage(e.toString())
+									.setNegativeButton("ok", null)
+									.show();
+
+								}
+							});
+						} catch (final JsonMappingException e) {
+							LoginActivity.this.runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									progressDialog.dismiss();
+									new AlertDialog.Builder(LoginActivity.this)
+									.setTitle("失败2")
+									.setMessage(e.toString())
+									.setNegativeButton("ok", null)
+									.show();
+
+								}
+							});
+						} catch (final IOException e) {
+							LoginActivity.this.runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									progressDialog.dismiss();
+									new AlertDialog.Builder(LoginActivity.this)
+									.setTitle("失败3")
+									.setMessage(e.toString())
+									.setNegativeButton("ok", null)
+									.show();
+
+								}
+							});
+						}
 
 					}
 				});
@@ -169,7 +201,12 @@ public class LoginActivity extends Activity {
 					@Override
 					public void run() {
 						progressDialog.dismiss();
-						Toast.makeText(LoginActivity.this, arg1.toString(), Toast.LENGTH_SHORT).show();
+						//Toast.makeText(LoginActivity.this, arg1.toString(), Toast.LENGTH_SHORT).show();
+						new AlertDialog.Builder(LoginActivity.this)
+						.setTitle("失败登录")
+						.setMessage(arg1.toString())
+						.setNegativeButton("ok", null)
+						.show();
 
 					}
 				});

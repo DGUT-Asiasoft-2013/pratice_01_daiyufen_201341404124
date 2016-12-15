@@ -5,7 +5,7 @@ import com.example.singleTextInputFragment.TabFragment.TabSelectClickListener;
 import com.example.tabFragment.Feed_fragment;
 import com.example.tabFragment.Life_fragment;
 import com.example.tabFragment.Me_fragment;
-import com.example.tabFragment.News_fragment;
+import com.example.tabFragment.AllComment_fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -14,7 +14,7 @@ import android.os.Bundle;
 public class AppActivity extends Activity {
 
 	Feed_fragment feed_fragment= new Feed_fragment(); // feed界面
-	News_fragment news_fragment=new News_fragment(); // news界面
+	AllComment_fragment news_fragment=new AllComment_fragment(); // news界面
 	Life_fragment life_fragment=new Life_fragment(); // life界面
 	Me_fragment me_fragment=new Me_fragment(); // me界面
 

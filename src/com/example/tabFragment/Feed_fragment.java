@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,6 +46,9 @@ public class Feed_fragment extends Fragment {
 	TextView load_tv;
 	List<Article> ab= new ArrayList<Article>();
 	protected int page;
+	
+	private Button btn_search;
+	private EditText editText;
 
 	FeedAdapter feedAdapter;
 	@Override
@@ -52,6 +58,17 @@ public class Feed_fragment extends Fragment {
 			view = inflater.inflate(R.layout.feed_frament, null);
 			loadMorebtn=inflater.inflate(R.layout.chart_buttom_page, null);
 			load_tv=(TextView) loadMorebtn.findViewById(R.id.tv);
+			
+			btn_search=(Button) view.findViewById(R.id.search_btn);
+			editText=(EditText) view.findViewById(R.id.search_ed);
+			btn_search.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					searchArticla(editText.getText().toString());
+				}
+			});
+			
 			feed_listv = (ListView) view.findViewById(R.id.feed_listView);
 			//ab=new ArrayList<Article>();
 			feed_listv.addFooterView(loadMorebtn);                //把这个btn放在底端必须在setAdapter之前完成
@@ -76,6 +93,62 @@ public class Feed_fragment extends Fragment {
 			feed_listv.setAdapter(feedAdapter);
 		}
 		return view;
+	}
+
+	//文章查找按钮的方法
+	protected void searchArticla(String keyword) {
+		
+		//创建请求
+		Request request=Servelet.requestuildApi("article/s/"+keyword).get().build();
+		//发起请求
+		Servelet.getOkHttpClient().newCall(request).enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Call arg0, Response arg1) throws IOException {
+				String string=arg1.body().string();
+				try {
+					final Page<Article> page;
+					ObjectMapper objectMapper=new ObjectMapper();
+					//把解析出来的用户内容放进article中
+					page=objectMapper.readValue(string, new TypeReference<Page<Article>>() {
+					});
+					
+					
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							//把解析下来的页数传给Feed_Fragment
+							Feed_fragment.this.page=page.getNumber();
+							//把解析下来的数据传给list
+							Feed_fragment.this.ab=page.getContent();
+							//刷新
+							feedAdapter.notifyDataSetInvalidated();
+						}
+					});
+				} catch (final Exception e) {
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							
+							new AlertDialog.Builder(getActivity())
+							.setTitle("失败111")
+							.setMessage(e.toString())
+							.show();
+						}
+					});
+					
+				}
+				
+			}
+			
+			@Override
+			public void onFailure(Call arg0, IOException arg1) {
+				onFailure(arg0, arg1);
+			}
+		});
+		
 	}
 
 	protected void AgainLoad() {
@@ -163,12 +236,12 @@ public class Feed_fragment extends Fragment {
 					
 					@Override
 					public void onResponse(Call arg0, Response arg1) throws IOException {
-//						final Article article;
+						String string=arg1.body().string();
 						try {
 							final Page<Article> page;
 							ObjectMapper objectMapper=new ObjectMapper();
 							//把解析出来的用户内容放进article中
-							page=objectMapper.readValue(arg1.body().string(), new TypeReference<Page<Article>>() {
+							page=objectMapper.readValue(string, new TypeReference<Page<Article>>() {
 							});
 							
 							

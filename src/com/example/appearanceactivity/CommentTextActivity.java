@@ -105,17 +105,24 @@ public class CommentTextActivity extends Activity {
 				});
 	}
 	
-	public void onResponse(Call arg0, String arg1)
+	public void onResponse(Call arg0, final String arg1)
 	{
-		new AlertDialog.Builder(this).setTitle("提交成功")
-		.setMessage(arg1.toString())
-		.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		runOnUiThread(new Runnable() {
 			
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				Comment_edit.setText("");
+			public void run() {
+				new AlertDialog.Builder(CommentTextActivity.this).setTitle("提交成功")
+				.setMessage(arg1.toString())
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Comment_edit.setText("");
+					}
+				}).show();
 			}
-		}).show();
+		});
+		
 	}
 	
 	public void  onFailure(Call arg0, Exception arg1) {

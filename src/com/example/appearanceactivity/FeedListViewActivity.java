@@ -16,8 +16,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,11 +30,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
 /*
- * ÎÄÕÂÁĞ±íµã»÷½øÀ´ÎÄÕÂÏêÇéÒ³Ãæ
+ * æ–‡ç« åˆ—è¡¨ç‚¹å‡»è¿›æ¥æ–‡ç« è¯¦æƒ…é¡µé¢
  */
 public class FeedListViewActivity extends Activity {
 
@@ -40,11 +43,13 @@ public class FeedListViewActivity extends Activity {
 	private Button comment_btn;
 	private Button like_btn;
 	Article article;
-	private ListView comment_list;        //ÆÀÂÛÁĞ±í
+	private ListView comment_list;        //è¯„è®ºåˆ—è¡¨
 	
-	private int page;         //Ò³Êı
+	private boolean isLiked;
 	
-	//´´½¨list°üÀ¨ÆÀÂÛ
+	private int page;         //é¡µæ•°
+	
+	//åˆ›å»ºliståŒ…æ‹¬è¯„è®º
 	List<Comment> comment=new ArrayList();
 	CommentAdapter commentAdapter;
 	@Override
@@ -55,24 +60,114 @@ public class FeedListViewActivity extends Activity {
 		comment_btn=(Button) findViewById(R.id.comment_btn);
 		comment_btn.setOnClickListener(new CommentOnClickListener());
 		like_btn=(Button) findViewById(R.id.likes);
+		like_btn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				toLike();
+				
+			}
+		});
 		comment_list=(ListView) findViewById(R.id.comment_list);
 		
 		
-		//String text=getIntent().getStringExtra("cont");     //»ñµÃ´«¹ıÀ´µÄÄÚÈİ
+		//String text=getIntent().getStringExtra("cont");     //è·å¾—ä¼ è¿‡æ¥çš„å†…å®¹
 		article=(Article) getIntent().getSerializableExtra("data");
 		tv.setText(article.getAuthorName()+":"+article.getText());
-		commentAdapter=new CommentAdapter();
+	    commentAdapter=new CommentAdapter();
 		comment_list.setAdapter(commentAdapter);
 	}
 	
+	public void toLike() {
+		MultipartBody body = new MultipartBody.Builder()
+				.addFormDataPart("likes", String.valueOf(!isLiked))
+				.build(); 
+		
+		Request request = Servelet.requestuildApi("article/"+article.getId()+"/likes")
+				.post(body).build();
+		
+		Servelet.getOkHttpClient().newCall(request).enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Call arg0, Response arg1) throws IOException {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						loadComment();
+					}
+				});
+			}
+			
+			@Override
+			public void onFailure(Call arg0, IOException arg1) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						loadComment();
+					}
+				});
+			}
+});
+	}
+	
+	void reloadLikes(){
+		Request request = Servelet.requestuildApi("/article/"+article.getId()+"/likes")
+				.get().build();
+		
+		Servelet.getOkHttpClient().newCall(request).enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Call arg0, Response arg1) throws IOException {
+				try{
+					//arg1.body().string()æ˜¯åå°è¿è¡Œçš„
+					String responseString = arg1.body().string();
+					final Integer count = new ObjectMapper().readValue(responseString, Integer.class);
+					
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							onReloadLikesResult(count);
+						}
+					});
+				}catch (Exception e) {
+					e.printStackTrace();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							onReloadLikesResult(0);
+						}
+					});
+				}
+			}
+			
+			@Override
+			public void onFailure(Call arg0, IOException e) {
+				e.printStackTrace();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						onReloadLikesResult(0);
+					}
+				});
+			}
+		});
+}
+	void onReloadLikesResult(int count){
+		if(count>0){
+			like_btn.setText("ç‚¹èµ("+count+")");
+		}else{
+			like_btn.setText("ç‚¹èµ");
+		}
+}
 	@Override
 	protected void onResume() {
 		super.onResume();
-		loadComment();           //ÏÂÔØÆÀÂÛ
+		loadComment();           //ä¸‹è½½è¯„è®º
 	}
 	
 	public void loadComment() {
-		//½¨Á¢ÇëÇó
+		
+		reloadLikes();
+		checkLiked();
+		//å»ºç«‹è¯·æ±‚
 		Request request=Servelet.requestuildApi("article/"+article.getId()+"/comment")
 				.get()
 				.build();
@@ -84,8 +179,12 @@ public class FeedListViewActivity extends Activity {
 				try {
 					final PageComment<Comment> pageComment;
 					ObjectMapper objectMapper=new ObjectMapper();
-					//°Ñ½âÎöÏÂÀ´µÄ¶«Î÷´«ÈëpageCommentÖĞ
-					pageComment=objectMapper.readValue(arg1.body().string(),
+					//æŠŠè§£æä¸‹æ¥çš„ä¸œè¥¿ä¼ å…¥pageCommentä¸­
+
+					String responseString = arg1.body().string();
+					Log.d("loading feed list", responseString);
+					
+					pageComment=objectMapper.readValue(responseString,
 							new TypeReference<PageComment<Comment>>() {});
 					
 					FeedListViewActivity.this.runOnUiThread(new Runnable() {
@@ -94,10 +193,10 @@ public class FeedListViewActivity extends Activity {
 
 						@Override
 						public void run() {
-							//°Ñ½âÎöÏÂÀ´µÄÒ³Êı´«¸øFeedListViewActivity
+							//æŠŠè§£æä¸‹æ¥çš„é¡µæ•°ä¼ ç»™FeedListViewActivity
 							page=pageComment.getNumber();
 							comment=pageComment.getContent();
-							//Ë¢ĞÂ
+							//åˆ·æ–°
 							commentAdapter.notifyDataSetInvalidated();
 						}
 					});
@@ -114,7 +213,7 @@ public class FeedListViewActivity extends Activity {
 						public void run() {
 							
 							new AlertDialog.Builder(FeedListViewActivity.this)
-							.setTitle("Ê§°Üing")
+							.setTitle("å¤±è´¥ing")
 							.setMessage(e.toString())
 							.show();
 						}
@@ -132,14 +231,82 @@ public class FeedListViewActivity extends Activity {
 	
 	public void onFailure(Call arg0, Exception arg1)  {
 		new AlertDialog.Builder(this)
-		.setTitle("Ê§°Ü")
+		.setTitle("å¤±è´¥")
 		.setMessage(arg1.toString())
 		.show();
 	}
+	
+	void checkLiked(){
+		Request request = Servelet.requestuildApi("article/"+article.getId()+"/isliked").get().build();
+		Servelet.getOkHttpClient().newCall(request).enqueue(new Callback() {
+			@Override
+			public void onResponse(Call arg0, Response arg1) throws IOException {
+				try{
+					final String responseString = arg1.body().string();
+					final Boolean result = new ObjectMapper().readValue(responseString, Boolean.class);
+					
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							onCheckLikedResult(result);
+						}
+					});
+				}catch (final JsonParseException e) {
+					FeedListViewActivity.this.runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							new AlertDialog.Builder(FeedListViewActivity.this)
+							.setTitle("å¤±è´¥1")
+							.setMessage(e.toString())
+							.setNegativeButton("ok", null)
+							.show();
+						}
+					});
+				}catch (final JsonMappingException e) {
+					FeedListViewActivity.this.runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							new AlertDialog.Builder(FeedListViewActivity.this)
+							.setTitle("å¤±è´¥2")
+							.setMessage(e.toString())
+							.setNegativeButton("ok", null)
+							.show();
+						}
+					});
+				}catch(final Exception e){
+					e.printStackTrace();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							onCheckLikedResult(false);
+						}
+					});
+				}
+			}
+			
+			@Override
+			public void onFailure(Call arg0, IOException e) {
+				e.printStackTrace();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						onCheckLikedResult(false);
+					}
+				});				
+			}
+		});
+	}
+	
+	void onCheckLikedResult(boolean result){
+		isLiked = result;
+		like_btn.setTextColor(result ? Color.BLUE : Color.BLACK);
+}
 
 
 	/*
-	 * ÆÀÂÛµÄ¼àÌıÆ÷
+	 * è¯„è®ºçš„ç›‘å¬å™¨
 	 */
 	class CommentOnClickListener implements OnClickListener
 	{
@@ -147,7 +314,7 @@ public class FeedListViewActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			Intent intent=new Intent(FeedListViewActivity.this, CommentTextActivity.class);
-			//°ÑarticleµÄÊı¾İÒ²·¢ËÍ¹ıÈ¥
+			//æŠŠarticleçš„æ•°æ®ä¹Ÿå‘é€è¿‡å»
 			intent.putExtra("article", article);
 			startActivity(intent);
 		}
@@ -155,7 +322,7 @@ public class FeedListViewActivity extends Activity {
 	}
 	
 	/*
-	 * ÁĞ±íµÄÊÊÅäÆ÷
+	 * åˆ—è¡¨çš„é€‚é…å™¨
 	 */
 	class CommentAdapter extends BaseAdapter
 	{
@@ -183,7 +350,7 @@ public class FeedListViewActivity extends Activity {
 			
 			
 			if (convertView==null) {
-				//Èç¹ûÊÓÍ¼Îª¿Õ£¬Ôò½¨Á¢ÊÓÍ¼
+				//å¦‚æœè§†å›¾ä¸ºç©ºï¼Œåˆ™å»ºç«‹è§†å›¾
 				LayoutInflater inflater=LayoutInflater.from(parent.getContext());
 				view=inflater.inflate(R.layout.comment_content_list, null);
 				 
@@ -191,10 +358,10 @@ public class FeedListViewActivity extends Activity {
 			else {
 				view=convertView;
 			}
-			TextView comment_name=(TextView) view.findViewById(R.id.commentor_name);
+			TextView comment_name=(TextView) view.findViewById(R.id.commenter_name);
 			TextView comment_time=(TextView) view.findViewById(R.id.commentor_time);
 			TextView comment_content=(TextView) view.findViewById(R.id.comment_text);
-			//»ñµÃÄ³Ò»ĞĞµÄÆÀÂÛ
+			//è·å¾—æŸä¸€è¡Œçš„è¯„è®º
 			Comment c=comment.get(position);
 			comment_name.setText(c.getCommentor().getName());
 			/*comment_name.setText("asaasdddd");

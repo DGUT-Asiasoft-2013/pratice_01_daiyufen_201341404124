@@ -1,15 +1,26 @@
 package com.example.tabFragment;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Comment implements Serializable{
+public class Comment{
 
+	private int id;
+	
 	String content;       //评论内容
 	User commentor;        //评论者
 	Date createDate;      //评论创建时间
 	Date editDate;      //评论编辑时间
 	Article article;
+	
+	
+	
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getContent() {
 		return content;
 	}
