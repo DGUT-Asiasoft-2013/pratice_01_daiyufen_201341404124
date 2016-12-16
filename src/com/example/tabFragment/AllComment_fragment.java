@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class AllComment_fragment extends Fragment {
 					String string=arg1.body().string();
 					final PageComment<Comment> c;
 					ObjectMapper objectMapper=new ObjectMapper();
+					Log.d("---------------ddddd---------------", string);
 					//把解析下来的数据给c
 					c=objectMapper.readValue(string, new TypeReference<PageComment<Comment>>() {
 					});
@@ -153,11 +155,11 @@ public class AllComment_fragment extends Fragment {
 			}
 			//获得某一行的comment内容
 			Comment comment=list.get(position);
-			TextView commenter_commentor_id=(TextView) newsview.findViewById(R.id.commenter_commentor_id);
+			TextView commenter_commentor_name=(TextView) newsview.findViewById(R.id.commenter_commentor_name);
 			TextView commentor_edit_time=(TextView) newsview.findViewById(R.id.commentor_edit_time);
 			TextView comment_content=(TextView) newsview.findViewById(R.id.comment_content);
 			
-			commenter_commentor_id.setText(comment.getId());
+			commenter_commentor_name.setText(comment.getCommentor().getName());
 			String dString=DateFormat.format("yyyy-MM-dd hh:mm", comment.getCreateDate()).toString();
 			commentor_edit_time.setText(dString);
 			comment_content.setText(comment.getContent());
