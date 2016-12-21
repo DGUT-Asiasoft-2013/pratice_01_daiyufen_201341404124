@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-//设置了JsonIgnoreProperties之后就可以忽略除了下列的东西了，服务器运行后，android运行就不会出现还需要其他的东西了
+//姝ゅ搴旇璺熺綉缁滀笂鐨勪竴鏍凤紝缃戜笂涓嬭浇鐨勭綉椤典腑
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Page<Article> {
 	//id
