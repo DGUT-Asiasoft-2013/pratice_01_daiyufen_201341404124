@@ -3,7 +3,6 @@ package com.example.tabFragment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.example.appearanceactivity.FeedListViewActivity;
 import com.example.appearanceactivity.R;
@@ -15,7 +14,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,13 +34,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /*
- * FeedÏÔÊ¾Ã¿ÌõÎÄÕÂ¼ò½é
+ * Feedé¡µé¢çš„æ˜¾ç¤ºå¸ƒå±€
  */
 public class Feed_fragment extends Fragment {
 
 	private ListView feed_listv;
 	View view;
-	View loadMorebtn;        //µ×¶Ë°´Å¥²¼¾Ö
+	View loadMorebtn;        //åŠ è½½æ›´å¤šæŒ‰é’®
 	TextView load_tv;
 	List<Article> ab= new ArrayList<Article>();
 	protected int page;
@@ -71,7 +69,7 @@ public class Feed_fragment extends Fragment {
 			
 			feed_listv = (ListView) view.findViewById(R.id.feed_listView);
 			//ab=new ArrayList<Article>();
-			feed_listv.addFooterView(loadMorebtn);                //°ÑÕâ¸öbtn·ÅÔÚµ×¶Ë±ØĞëÔÚsetAdapterÖ®Ç°Íê³É
+			feed_listv.addFooterView(loadMorebtn);                //loadMorebtnå¿…é¡»æ”¾åœ¨setAdapterä¹‹å‰
 
 			feed_listv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -89,18 +87,18 @@ public class Feed_fragment extends Fragment {
 				}
 			});
 			feedAdapter=new FeedAdapter();
-			// Ìí¼Ó¼àÌıÆ÷
+			// ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½
 			feed_listv.setAdapter(feedAdapter);
 		}
 		return view;
 	}
 
-	//ÎÄÕÂ²éÕÒ°´Å¥µÄ·½·¨
+	//ï¿½ï¿½ï¿½Â²ï¿½ï¿½Ò°ï¿½Å¥ï¿½Ä·ï¿½ï¿½ï¿½
 	protected void searchArticla(String keyword) {
 		
-		//´´½¨ÇëÇó
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		Request request=Servelet.requestuildApi("article/s/"+keyword).get().build();
-		//·¢ÆğÇëÇó
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		Servelet.getOkHttpClient().newCall(request).enqueue(new Callback() {
 			
 			@Override
@@ -109,7 +107,7 @@ public class Feed_fragment extends Fragment {
 				try {
 					final Page<Article> page;
 					ObjectMapper objectMapper=new ObjectMapper();
-					//°Ñ½âÎö³öÀ´µÄÓÃ»§ÄÚÈİ·Å½øarticleÖĞ
+					//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½İ·Å½ï¿½articleï¿½ï¿½
 					page=objectMapper.readValue(string, new TypeReference<Page<Article>>() {
 					});
 					
@@ -118,11 +116,11 @@ public class Feed_fragment extends Fragment {
 						
 						@Override
 						public void run() {
-							//°Ñ½âÎöÏÂÀ´µÄÒ³Êı´«¸øFeed_Fragment
+							//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Feed_Fragment
 							Feed_fragment.this.page=page.getNumber();
-							//°Ñ½âÎöÏÂÀ´µÄÊı¾İ´«¸ølist
+							//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½list
 							Feed_fragment.this.ab=page.getContent();
-							//Ë¢ĞÂ
+							//Ë¢ï¿½ï¿½
 							feedAdapter.notifyDataSetInvalidated();
 						}
 					});
@@ -133,7 +131,7 @@ public class Feed_fragment extends Fragment {
 						public void run() {
 							
 							new AlertDialog.Builder(getActivity())
-							.setTitle("Ê§°Ü111")
+							.setTitle("å¤±è´¥111")
 							.setMessage(e.toString())
 							.show();
 						}
@@ -152,12 +150,12 @@ public class Feed_fragment extends Fragment {
 	}
 
 	protected void AgainLoad() {
-		//µã»÷ºó¾ÍÉèÖÃ²»¿ÉÔÙ°´ÁË
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ï¿½ï¿½
 		loadMorebtn.setEnabled(false);
-		load_tv.setText("¼ÓÔØÖĞ");
-		 //»ñµÃ¿Í»§¶Ë
+		load_tv.setText("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		 //ï¿½ï¿½Ã¿Í»ï¿½ï¿½ï¿½
 		OkHttpClient client=Servelet.getOkHttpClient();
-		//»ñµÃÇëÇó
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		Request request=Servelet.requestuildApi("feeds/"+(page+1)).get().build();
 		client.newCall(request).enqueue(new Callback() {
 			
@@ -168,7 +166,7 @@ public class Feed_fragment extends Fragment {
 					@Override
 					public void run() {
 						loadMorebtn.setEnabled(true);
-						load_tv.setText("¼ÓÔØ¸ü¶à");
+						load_tv.setText("ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½");
 					}
 				});
 				
@@ -178,7 +176,7 @@ public class Feed_fragment extends Fragment {
 					});
 					if (page.getNumber()>Feed_fragment.this.page) {
 						if (ab==null) {
-							//ÅĞ¶ÏÁĞ±íÊÇ·ñÎª¿Õ£¬Èç¹ûÎª¿Õ£¬Ôò°Ñ½âÎöµÄÊı¾İ¸³Öµ¸øÁĞ±í
+							//ï¿½Ğ¶ï¿½ï¿½Ğ±ï¿½ï¿½Ç·ï¿½Îªï¿½Õ£ï¿½ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½ï¿½ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¸ï¿½Öµï¿½ï¿½ï¿½Ğ±ï¿½
 							ab=page.getContent();
 							
 						}
@@ -191,8 +189,8 @@ public class Feed_fragment extends Fragment {
 							
 							@Override
 							public void run() {
-								Feed_fragment.this.page=page.getNumber();     //°Ñµ±Ç°µÄÒ³Êı¸³Öµ¸øintÀàĞÍµÄpage
-								//Ë¢ĞÂadapter
+								Feed_fragment.this.page=page.getNumber();     //è·å¾—é¡µæ•°
+								//åˆ·æ–°adapter
 								feedAdapter.notifyDataSetInvalidated();
 							}
 						});
@@ -210,7 +208,7 @@ public class Feed_fragment extends Fragment {
 					@Override
 					public void run() {
 						loadMorebtn.setEnabled(true);
-						load_tv.setText("¼ÓÔØ¸ü¶à");
+						load_tv.setText("ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½");
 					}
 				});
 				
@@ -226,12 +224,12 @@ public class Feed_fragment extends Fragment {
 	}
 
 	public void load() {
-		          //»ñµÃ¿Í»§¶Ë
+		          //å¼€å¯å®¢æˆ·ç«¯
 				OkHttpClient client=Servelet.getOkHttpClient();
-				//»ñµÃÇëÇó
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				Request request=Servelet.requestuildApi("feeds").get().build();
 				
-				//·¢ÆğÇëÇó
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				client.newCall(request).enqueue(new Callback() {
 					
 					@Override
@@ -240,7 +238,7 @@ public class Feed_fragment extends Fragment {
 						try {
 							final Page<Article> page;
 							ObjectMapper objectMapper=new ObjectMapper();
-							//°Ñ½âÎö³öÀ´µÄÓÃ»§ÄÚÈİ·Å½øarticleÖĞ
+							//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½İ·Å½ï¿½articleï¿½ï¿½
 							page=objectMapper.readValue(string, new TypeReference<Page<Article>>() {
 							});
 							
@@ -249,11 +247,11 @@ public class Feed_fragment extends Fragment {
 								
 								@Override
 								public void run() {
-									//°Ñ½âÎöÏÂÀ´µÄÒ³Êı´«¸øFeed_Fragment
+									//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Feed_Fragment
 									Feed_fragment.this.page=page.getNumber();
-									//°Ñ½âÎöÏÂÀ´µÄÊı¾İ´«¸ølist
+									//ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½list
 									Feed_fragment.this.ab=page.getContent();
-									//Ë¢ĞÂ
+									//Ë¢ï¿½ï¿½
 									feedAdapter.notifyDataSetInvalidated();
 								}
 							});
@@ -264,7 +262,7 @@ public class Feed_fragment extends Fragment {
 								public void run() {
 									
 									new AlertDialog.Builder(getActivity())
-									.setTitle("Ê§°Ü111")
+									.setTitle("Ê§ï¿½ï¿½111")
 									.setMessage(e.toString())
 									.show();
 								}
@@ -283,24 +281,24 @@ public class Feed_fragment extends Fragment {
 	
 	public void onFailure(Call arg0, Exception arg1)  {
 		new AlertDialog.Builder(getActivity())
-		.setTitle("Ê§°Ü")
+		.setTitle("Ê§ï¿½ï¿½")
 		.setMessage(arg1.toString())
 		.show();
 	}
 
 	public void OnItemSelected(int position) {
 		Article article = ab.get(position);
-		String content = article.getAuthorName()+":"+article.getText(); // »ñµÃcontentÄÚÈİ
+		String content = article.getAuthorName()+":"+article.getText(); // ï¿½ï¿½ï¿½contentï¿½ï¿½ï¿½ï¿½
 		Intent intent = new Intent(getActivity(), FeedListViewActivity.class);
-		// °ÑÊı¾İ´«ÈëintentÖĞÈ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½intentï¿½ï¿½È¥
 		//intent.putExtra("cont", content);
-		//±ØĞëArticleÀàÖĞÊµÏÖSerializable²ÅÄÜÊ¹ÓÃputExtra
+		//ï¿½ï¿½ï¿½ï¿½Articleï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Serializableï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½putExtra
 		intent.putExtra("data", article);
 		startActivity(intent);
 	}
 
 	/*
-	 * ÎªlistviewÉèÖÃ¼àÌıÆ÷
+	 * Îªlistviewï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	class FeedAdapter extends BaseAdapter {
 
@@ -324,14 +322,14 @@ public class Feed_fragment extends Fragment {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			viewHolde = new ViewHolde(); // ´´½¨ViewHolde¶ÔÏó
+			viewHolde = new ViewHolde(); // ï¿½ï¿½ï¿½ï¿½ViewHoldeï¿½ï¿½ï¿½ï¿½
 			if (convertView == null) {
 
-				// »ñµÃinflater¶ÔÏó£¬ÎªÏÂÃæµÄfeedview»ñµÃlayout×ö×¼±¸
+				// ï¿½ï¿½ï¿½inflaterï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½feedviewï¿½ï¿½ï¿½layoutï¿½ï¿½×¼ï¿½ï¿½
 				LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-				// ÎªfeedviewÉèÖÃ²¼¾Ö
+				// Îªfeedviewï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½
 				convertView = inflater.inflate(R.layout.chart_left_page, null);
-				// ÎªÓÃ»§µÄ×é¼şÌá¹©id
+				// Îªï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á¹©id
 				viewHolde.userimage = (ImageView) convertView.findViewById(R.id.left_men);
 				viewHolde.userName = (TextView) convertView.findViewById(R.id.left_name);
 				viewHolde.userContent = (TextView) convertView.findViewById(R.id.content_textview);
@@ -341,7 +339,7 @@ public class Feed_fragment extends Fragment {
 			} else {
 				viewHolde = (ViewHolde) convertView.getTag();
 			}
-			//»ñµÃÄ³Ò»ĞĞµÄarticle
+			//ï¿½ï¿½ï¿½Ä³Ò»ï¿½Ğµï¿½article
 			Article article=ab.get(position);
 			viewHolde.userimage.setBackgroundResource(R.drawable.women);
 			viewHolde.userName.setText(article.getAuthorName());
